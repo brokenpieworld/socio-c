@@ -1,7 +1,10 @@
 import Head from "next/head";
-import React from "react";
+import Link from "next/link";
+import React, { useState } from "react";
 
 export default function Layout({ children }) {
+  const [isLoggedIn, setisLoggedIN] = useState(false);
+
   return (
     <>
       <Head>
@@ -44,14 +47,26 @@ export default function Layout({ children }) {
             <div className="navbar-item">
               <div className="field is-grouped">
                 <p className="control">
-                  <a className="bd-tw-button button">
-                    <span>Login</span>
-                  </a>
+                  {isLoggedIn ? (
+                    <Link href={"/panel/home"}>
+                      <a className="is-warning button">Dashboard</a>
+                    </Link>
+                  ) : (
+                    <Link href={"/login"}>
+                      <a className="is-warning button">Login</a>
+                    </Link>
+                  )}
                 </p>
                 <p className="control">
-                  <a className="button is-primary">
-                    <span>Signup</span>
-                  </a>
+                  {isLoggedIn ? (
+                    <Link href={"/panel/logout"}>
+                      <a className="is-link button">Logout</a>
+                    </Link>
+                  ) : (
+                    <Link href={"/register"}>
+                      <a className="is-link button">Register</a>
+                    </Link>
+                  )}
                 </p>
               </div>
             </div>

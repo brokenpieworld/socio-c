@@ -1,6 +1,47 @@
 import React, { Component } from "react";
+import { Toast } from "../components/Helper";
+import swal from "sweetalert";
 
 export default class index extends Component {
+  constructor() {
+    super();
+    this.state = {
+      isLoggedIn: false,
+      uid: null,
+      appCode: null,
+    };
+    this.amount = React.createRef();
+    this.coin = React.createRef();
+  }
+
+  componentDidMount() {
+    if (typeof window !== undefined) {
+      if (localStorage.getItem("uid")) {
+        this.setState({
+          isLoggedIn: true,
+          uid: localStorage.getItem("uid"),
+          appCode: localStorage.getItem("appcode"),
+        });
+      }
+    }
+  }
+
+  async processOrderMetamask() {
+    var coin = this.coin.current.value;
+    var amount = this.amount.current.value;
+    if (amount < process.env.NEXT_PUBLIC_MIN_BUY_AMT) {
+      return Toast(
+        "You must buy minimum " +
+          process.env.NEXT_PUBLIC_MIN_BUY_AMT +
+          " " +
+          coin
+      );
+    }
+    if (!this.state.isLoggedIn) {
+      return Toast("Please login your account first or create a new account.");
+    }
+  }
+
   render() {
     return (
       <section className="section">
@@ -23,6 +64,7 @@ export default class index extends Component {
               <div className="columns is-mobile mt-2">
                 <div className="column is-8 pr-0">
                   <input
+                    ref={this.amount}
                     className="input"
                     type="text"
                     placeholder="Enter Amount"
@@ -30,7 +72,7 @@ export default class index extends Component {
                 </div>
                 <div className="column is-4 pl-1">
                   <div className="select">
-                    <select>
+                    <select ref={this.coin}>
                       <option>TRC</option>
                     </select>
                   </div>
@@ -38,7 +80,12 @@ export default class index extends Component {
               </div>
               <div className="columns mt-5">
                 <div className="column">
-                  <button className="button is-warning is-fullwidth">
+                  <button
+                    className="button is-warning is-fullwidth"
+                    onClick={() => {
+                      this.processOrderMetamask();
+                    }}
+                  >
                     Metamask / Trust Wallet (BNB)
                   </button>
                 </div>
