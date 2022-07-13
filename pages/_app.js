@@ -16,7 +16,6 @@ function MyApp({ Component, pageProps }) {
         rtl={false}
         pauseOnFocusLoss
         draggable
-        pauseOnHover
         theme={"colored"}
       />
     </Layout>

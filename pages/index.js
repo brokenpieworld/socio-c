@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import { Toast } from "../components/Helper";
 import swal from "sweetalert";
+import Router from "next/router";
 
 export default class index extends Component {
   constructor() {
@@ -38,9 +39,31 @@ export default class index extends Component {
       );
     }
     if (!this.state.isLoggedIn) {
-      return Toast("Please login your account first or create a new account.");
+      Toast("Please login your account first or create a new account.");
+      return Router.push("/login");
     }
+    swal({
+      title: "Are you sure?",
+      text:
+        "You want to buy " +
+        amount +
+        " " +
+        coin +
+        " of worth $ " +
+        amount * process.env.NEXT_PUBLIC_COIN_USD_VAL +
+        " USD",
+      icon: "info",
+      buttons: true,
+      dangerMode: true,
+    }).then(async (willDelete) => {
+      if (willDelete) {
+        await this.buyMetamask();
+      } else {
+      }
+    });
   }
+
+  async buyMetamask() {}
 
   render() {
     return (
