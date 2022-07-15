@@ -4,6 +4,7 @@ import React, { useState } from "react";
 
 export default function Layout({ children }) {
   const [isLoggedIn, setisLoggedIN] = useState(false);
+  const [isnavopen, setnavopen] = useState(true);
 
   return (
     <>
@@ -34,7 +35,9 @@ export default function Layout({ children }) {
           </a>
           <div
             className="navbar-burger"
-            data-target="navbarExampleTransparentExample"
+            onClick={() => {
+              isnavopen ? setnavopen(false) : setnavopen(true);
+            }}
           >
             <span></span>
             <span></span>
@@ -42,8 +45,18 @@ export default function Layout({ children }) {
           </div>
         </div>
 
-        <div id="navbarExampleTransparentExample" className="navbar-menu">
+        <div
+          id="navbarExampleTransparentExample"
+          className={
+            isnavopen ? "navbar-menu display-0" : "navbar-menu display-none"
+          }
+        >
           <div className="navbar-end">
+            <li className="navbar-item">
+              <Link href={"/"}>
+                <a>Home</a>
+              </Link>
+            </li>
             <div className="navbar-item">
               <div className="field is-grouped">
                 <p className="control">
@@ -53,18 +66,14 @@ export default function Layout({ children }) {
                     </Link>
                   ) : (
                     <Link href={"/login"}>
-                      <a className="is-warning button">Login</a>
+                      <a className="is-link button">Login</a>
                     </Link>
                   )}
                 </p>
                 <p className="control">
-                  {isLoggedIn ? (
+                  {isLoggedIn && (
                     <Link href={"/panel/logout"}>
                       <a className="is-link button">Logout</a>
-                    </Link>
-                  ) : (
-                    <Link href={"/register"}>
-                      <a className="is-link button">Register</a>
                     </Link>
                   )}
                 </p>

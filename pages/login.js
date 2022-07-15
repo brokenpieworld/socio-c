@@ -6,8 +6,9 @@ import { Toast } from "../components/Helper";
 export default class login extends Component {
   constructor() {
     super();
-    this.email = React.createRef();
-    this.password = React.createRef();
+    this.state = {
+      address: null,
+    };
   }
 
   componentDidMount() {
@@ -22,15 +23,20 @@ export default class login extends Component {
     }
   }
 
+  async trustwallet() {
+    if (!this.isMetaMaskInstalled || !this.isTrustWalletInstalled) {
+      return Toast(
+        "Oops ! Your have to connect using trustwallet or metamask."
+      );
+    }
+  }
+
   async processLogin() {
-    var email = this.email.current.value;
-    var password = this.password.current.value;
-    if (email == "" || password == "") {
-      return Toast("Oops ! Your have to put email and password both");
+    if (this.state.address == "") {
+      return Toast("Oops ! Your have to connect using trustwallet or metamask");
     }
     var detail = await axios.post(process.env.NEXT_PUBLIC_URL + "/api/login", {
-      email: email,
-      password: password,
+      address: this.state.address,
     });
     if (detail.data.status) {
       if (typeof window !== undefined) {
@@ -44,6 +50,17 @@ export default class login extends Component {
     }
   }
 
+  isMetaMaskInstalled() {
+    //Have to check the ethereum binding on the window object to see if it's installed
+    const { ethereum } = window;
+    return Boolean(ethereum && ethereum.isMetaMask);
+  }
+  isTrustWalletInstalled() {
+    //Have to check the ethereum binding on the window object to see if it's installed
+    const { ethereum } = window;
+    return Boolean(ethereum && ethereum.isTrust);
+  }
+
   render() {
     return (
       <div className="section">
@@ -55,37 +72,21 @@ export default class login extends Component {
                   Login Your Account
                 </p>
               </header>
-              <div className="card-content">
-                <div className="field">
-                  <label>Enter Your Email ID</label>
-                  <input ref={this.email} className="input" type="email" />
-                </div>
-                <div className="field">
-                  <label>Enter Your Password</label>
-                  <input
-                    ref={this.password}
-                    className="input"
-                    type="password"
-                  />
-                </div>
-                <Link href={"/forgot"}>
-                  <a>Forgot Password ?</a>
-                </Link>
-                <br />
+              <div className="card-content m-5">
                 <div className="columns is-mobile">
                   <div className="column">
                     <button
                       onClick={() => {
-                        this.processLogin();
+                        this.trustwallet();
                       }}
                       className="button is-link mt-2 is-fullwidth"
                     >
-                      Login
+                      Trustwallet
                     </button>
                   </div>
                   <div className="column">
-                    <button className="button is-warning mt-2 is-fullwidth">
-                      Register
+                    <button className="button is-danger mt-2 is-fullwidth">
+                      Metamask
                     </button>
                   </div>
                 </div>
