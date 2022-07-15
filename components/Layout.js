@@ -1,11 +1,20 @@
 import Head from "next/head";
 import Link from "next/link";
-import React, { useState } from "react";
+import Router from "next/router";
+import React, { useEffect, useState } from "react";
+import { Toast } from "./Helper";
 
 export default function Layout({ children }) {
   const [isLoggedIn, setisLoggedIN] = useState(false);
-  const [isnavopen, setnavopen] = useState(true);
+  const [isActive, setisActive] = React.useState(false);
 
+  useEffect(() => {
+    if (typeof window !== undefined) {
+      if (localStorage.getItem("uid")) {
+        setisLoggedIN(true);
+      }
+    }
+  });
   return (
     <>
       <Head>
@@ -34,9 +43,9 @@ export default function Layout({ children }) {
             </span>
           </a>
           <div
-            className="navbar-burger"
+            className={`navbar-burger burger ${isActive ? "is-active" : ""}`}
             onClick={() => {
-              isnavopen ? setnavopen(false) : setnavopen(true);
+              setisActive(!isActive);
             }}
           >
             <span></span>
@@ -47,9 +56,7 @@ export default function Layout({ children }) {
 
         <div
           id="navbarExampleTransparentExample"
-          className={
-            isnavopen ? "navbar-menu display-0" : "navbar-menu display-none"
-          }
+          className={`navbar-menu ${isActive ? "is-active" : ""}`}
         >
           <div className="navbar-end">
             <li className="navbar-item">
@@ -72,9 +79,19 @@ export default function Layout({ children }) {
                 </p>
                 <p className="control">
                   {isLoggedIn && (
-                    <Link href={"/panel/logout"}>
-                      <a className="is-link button">Logout</a>
-                    </Link>
+                    <a
+                      onClick={() => {
+                        Toast("You have been logged out", "success");
+                        if (typeof window !== undefined) {
+                          localStorage.clear();
+                        }
+                        setisLoggedIN(false);
+                        return Router.push("/");
+                      }}
+                      className="is-link button"
+                    >
+                      Logout
+                    </a>
                   )}
                 </p>
               </div>

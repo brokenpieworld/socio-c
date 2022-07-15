@@ -7,7 +7,7 @@ export default class login extends Component {
   constructor() {
     super();
     this.state = {
-      address: null,
+      loading: false,
     };
   }
 
@@ -29,22 +29,41 @@ export default class login extends Component {
         "Oops ! Your have to connect using trustwallet or metamask."
       );
     }
+    this.setState({ loading: true });
+    const { ethereum } = window;
+    await ethereum.request({
+      method: "wallet_addEthereumChain",
+      params: [
+        {
+          chainId: "0x38",
+          chainName: "Binance Smart Chain",
+          rpcUrls: ["https://bsc-dataseed.binance.org/"],
+          blockExplorerUrls: ["https://bscscan.com"],
+          nativeCurrency: {
+            symbol: "BNB",
+            decimals: 18,
+          },
+        },
+      ],
+    });
+
     var address = await this.getAddress();
     if (address[0]) {
-      await this.setState({ address: address[0] });
-      await this.processLogin();
+      await this.processLogin(address[0]);
     }
-    alert(address[0]);
+    this.setState({ loading: false });
     return Toast("Oops ! Your have to connect using trustwallet or metamask");
   }
 
-  async processLogin() {
-    if (this.state.address == "") {
+  async processLogin(address) {
+    if (address == "") {
+      this.setState({ loading: false });
       return Toast("Oops ! Your have to connect using trustwallet or metamask");
     }
     var detail = await axios.post(process.env.NEXT_PUBLIC_URL + "/api/login", {
-      address: this.state.address,
+      address: address,
     });
+    this.setState({ loading: false });
     if (detail.data.status) {
       if (typeof window !== undefined) {
         localStorage.setItem("uid", detail.data.message.uid);
@@ -91,26 +110,36 @@ export default class login extends Component {
               </header>
               <div className="card-content m-5">
                 <div className="columns is-mobile">
-                  <div className="column">
-                    <button
-                      onClick={() => {
-                        this.trustwallet();
-                      }}
-                      className="button is-link mt-2 is-fullwidth"
-                    >
-                      Trustwallet
-                    </button>
-                  </div>
-                  <div className="column">
-                    <button
-                      onClick={() => {
-                        this.trustwallet();
-                      }}
-                      className="button is-danger mt-2 is-fullwidth"
-                    >
-                      Metamask
-                    </button>
-                  </div>
+                  {this.state.loading ? (
+                    <>
+                      <button className="button is-loading is-info m-5 is-fullwidth">
+                        Wait a Momemnt..
+                      </button>
+                    </>
+                  ) : (
+                    <>
+                      <div className="column">
+                        <button
+                          onClick={() => {
+                            this.trustwallet();
+                          }}
+                          className="button is-link mt-2 is-fullwidth"
+                        >
+                          Trustwallet
+                        </button>
+                      </div>
+                      <div className="column">
+                        <button
+                          onClick={() => {
+                            this.trustwallet();
+                          }}
+                          className="button is-danger mt-2 is-fullwidth"
+                        >
+                          Metamask
+                        </button>
+                      </div>
+                    </>
+                  )}
                 </div>
               </div>
             </div>
