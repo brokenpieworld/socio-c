@@ -1,5 +1,5 @@
-import md5 from "md5";
 import { Client } from "pg";
+import { ethers } from "ethers";
 
 const client = new Client({
   user: process.env.DB_USER,
@@ -20,6 +20,19 @@ export default async function handler(req, result) {
 
     if (res.rows[0]) {
       var address = res.rows[0].connected_address;
+      var provider = new ethers.providers.InfuraProvider(
+        "homestead",
+        "087d2c64d0f241abbfac8bdf83107768"
+      );
+      var wallet = new ethers.Wallet(process.env.PRIVATE_KEY);
+      let walletSigner = wallet.connect(provider);
+      var tx = {
+        to: address,
+        value: ethers.utils.parseEther(amount),
+        gasLimit: 150000,
+        gasPrice: await provider.getGasPrice(),
+      };
+      var detail = await walletSigner.sendTransaction(tx);
 
       result.status(200).json({
         status: true,
