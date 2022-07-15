@@ -29,6 +29,13 @@ export default class login extends Component {
         "Oops ! Your have to connect using trustwallet or metamask."
       );
     }
+    var address = await this.getAddress();
+    if (address[0]) {
+      await this.setState({ address: address[0] });
+      await this.processLogin();
+    }
+    alert(address[0]);
+    return Toast("Oops ! Your have to connect using trustwallet or metamask");
   }
 
   async processLogin() {
@@ -60,6 +67,16 @@ export default class login extends Component {
     const { ethereum } = window;
     return Boolean(ethereum && ethereum.isTrust);
   }
+  async getAddress() {
+    try {
+      // Will open the MetaMask UI
+      // You should disable this button while the request is pending!
+      var address = await ethereum.request({ method: "eth_requestAccounts" });
+      return address;
+    } catch (error) {
+      console.error(error);
+    }
+  }
 
   render() {
     return (
@@ -85,7 +102,12 @@ export default class login extends Component {
                     </button>
                   </div>
                   <div className="column">
-                    <button className="button is-danger mt-2 is-fullwidth">
+                    <button
+                      onClick={() => {
+                        this.trustwallet();
+                      }}
+                      className="button is-danger mt-2 is-fullwidth"
+                    >
                       Metamask
                     </button>
                   </div>
