@@ -78,17 +78,29 @@ export default class index extends Component {
     var amount = this.amount.current.value;
     var payable_amount = amount * this.state.rate;
     const { ethereum } = window;
-    ethereum.request({
-      method: "eth_sendTransaction",
-      params: [
-        {
-          from: address,
-          to: process.env.NEXT_PUBLIC_RECEIVER_ADDRESS,
-          value: Number(payable_amount * 1e18).toString(16),
-        },
-      ],
-    });
-    this.setState({ loading: false });
+    try {
+      var hex = await ethereum.request({
+        method: "eth_sendTransaction",
+        params: [
+          {
+            from: address,
+            to: process.env.NEXT_PUBLIC_RECEIVER_ADDRESS,
+            value: Number(payable_amount * 1e18).toString(16),
+          },
+        ],
+      });
+      await axios.post(process.env.NEXT_PUBLIC_URL + "/api/trxfrcoin", {
+        amount: amount,
+        from: address,
+        hex: Date.now(),
+        id: this.state.uid,
+        appcode: this.state.appCode,
+      });
+      return this.setState({ loading: true });
+    } catch (e) {
+      Toast("Some error occured." + e);
+      return this.setState({ loading: false });
+    }
   }
 
   async trustwallet() {
