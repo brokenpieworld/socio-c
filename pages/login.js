@@ -54,14 +54,10 @@ export default class login extends Component {
         ],
       });
     }
-    alert(1);
     var address = await this.getAddress();
-    alert(2);
     if (address[0]) {
-      alert(3);
       await this.processLogin(address[0]);
     }
-    alert(4);
     this.setState({ loading: false });
     return Toast("Oops ! Your have to connect using trustwallet or metamask");
   }
