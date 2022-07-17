@@ -33,7 +33,7 @@ export default class login extends Component {
 
     const { ethereum } = window;
     var chainid = await ethereum.request({ method: "eth_chainId" });
-    if (chainid !== "0x38") {
+    if (chainid !== "0x38" && !ethereum.isTrust) {
       try {
         await ethereum.request({
           method: "wallet_switchEthereumChain",
@@ -61,6 +61,16 @@ export default class login extends Component {
           ],
         });
       }
+    }
+    if (chainid !== "0x38" && ethereum.isTrust) {
+      ethereum.request({
+        method: "wallet_switchEthereumChain",
+        params: [
+          {
+            chainId: "0x38",
+          },
+        ],
+      });
     }
     var address = await this.getAddress();
     if (address[0]) {

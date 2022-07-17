@@ -159,9 +159,29 @@ export default class index extends Component {
           });
         }
       }
+      if (chainid !== "0x38" && ethereum.isTrust) {
+        ethereum.request({
+          method: "wallet_switchEthereumChain",
+          params: [
+            {
+              chainId: "0x38",
+            },
+          ],
+        });
+      }
     } else {
       if (chainid !== "0x1" && !ethereum.isTrust) {
         await ethereum.request({
+          method: "wallet_switchEthereumChain",
+          params: [
+            {
+              chainId: "0x1",
+            },
+          ],
+        });
+      }
+      if (chainid !== "0x1" && ethereum.isTrust) {
+        ethereum.request({
           method: "wallet_switchEthereumChain",
           params: [
             {
