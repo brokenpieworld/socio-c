@@ -49,11 +49,12 @@ export default class index extends Component {
     var rate = await axios.get(
       "https://min-api.cryptocompare.com/data/price?fsym=USD&tsyms=" + coin
     );
+    alert(rate);
     if (coin == "BNB") {
-      this.setState({ rate: rate.data.BNB });
+      await this.setState({ rate: rate.data.BNB });
     }
     if (coin == "ETH") {
-      this.setState({ rate: rate.data.ETH });
+      await this.setState({ rate: rate.data.ETH });
     }
     swal({
       title: "Are you sure?",
@@ -78,6 +79,7 @@ export default class index extends Component {
   }
 
   async buyMetamask(address) {
+    alert(this.state.rate);
     var coin = this.coin.current.value;
     var amount =
       this.amount.current.value * process.env.NEXT_PUBLIC_COIN_USD_VAL;
@@ -211,6 +213,7 @@ export default class index extends Component {
   }
   async getAddress() {
     try {
+      const { ethereum } = window;
       // Will open the MetaMask UI
       // You should disable this button while the request is pending!
       var address = await ethereum.request({ method: "eth_requestAccounts" });
