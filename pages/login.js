@@ -31,6 +31,7 @@ export default class login extends Component {
     }
     this.setState({ loading: true });
     const { ethereum } = window;
+    alert(0);
     await ethereum.request({
       method: "wallet_addEthereumChain",
       params: [
