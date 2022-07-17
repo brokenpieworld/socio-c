@@ -133,7 +133,11 @@ export default class index extends Component {
       try {
         await ethereum.request({
           method: "wallet_switchEthereumChain",
-          params: [{ chainId: "0x38" }],
+          params: [
+            {
+              chainId: "0x38",
+            },
+          ],
         });
       } catch (switchError) {
         await ethereum.request({
