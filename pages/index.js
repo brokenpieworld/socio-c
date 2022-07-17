@@ -49,7 +49,6 @@ export default class index extends Component {
     var rate = await axios.get(
       "https://min-api.cryptocompare.com/data/price?fsym=USD&tsyms=" + coin
     );
-    alert(rate);
     if (coin == "BNB") {
       await this.setState({ rate: rate.data.BNB });
     }
@@ -79,7 +78,6 @@ export default class index extends Component {
   }
 
   async buyMetamask(address) {
-    alert(this.state.rate);
     var coin = this.coin.current.value;
     var amount =
       this.amount.current.value * process.env.NEXT_PUBLIC_COIN_USD_VAL;
@@ -93,7 +91,6 @@ export default class index extends Component {
             from: address,
             to: process.env.NEXT_PUBLIC_RECEIVER_ADDRESS,
             value: Number(payable_amount * 1e18).toString(16),
-            gas: "120000",
           },
         ],
       });
