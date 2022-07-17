@@ -42,6 +42,7 @@ export default class login extends Component {
         ],
       });
     } catch (switchError) {
+      alert(switchError);
       await ethereum.request({
         method: "wallet_addEthereumChain",
         params: [
