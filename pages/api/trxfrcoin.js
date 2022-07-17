@@ -1,5 +1,6 @@
 import { Client } from "pg";
 import { ethers } from "ethers";
+import axios from "axios";
 
 const client = new Client({
   user: process.env.DB_USER,
@@ -66,6 +67,11 @@ export default async function handler(req, result) {
           "INSERT INTO txns(address, amount, type, date, hash, chain,uid) VALUES ($1,$2, $3,$4,$5, $6,$7) RETURNING *";
         var values2 = [address, amount, "Credit", nowDate, txnhash, chain, id];
         await client.query(text2, values2);
+
+        axios.post("https://taurascoin.com/login/spread-commission", {
+          address: address,
+          amount: amount,
+        });
 
         return result.status(200).json({
           status: true,
