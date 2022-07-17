@@ -130,21 +130,28 @@ export default class index extends Component {
     var coin = this.coin.current.value;
     const { ethereum } = window;
     if (coin == "BNB" || coin == "BUSD") {
-      await ethereum.request({
-        method: "wallet_addEthereumChain",
-        params: [
-          {
-            chainId: "0x38",
-            chainName: "Binance Smart Chain",
-            rpcUrls: ["https://bsc-dataseed.binance.org/"],
-            blockExplorerUrls: ["https://bscscan.com"],
-            nativeCurrency: {
-              symbol: "BNB",
-              decimals: 18,
+      try {
+        await ethereum.request({
+          method: "wallet_switchEthereumChain",
+          params: [{ chainId: "0x38" }],
+        });
+      } catch (switchError) {
+        await ethereum.request({
+          method: "wallet_addEthereumChain",
+          params: [
+            {
+              chainId: "0x38",
+              chainName: "Binance Smart Chain",
+              rpcUrls: ["https://bsc-dataseed.binance.org/"],
+              blockExplorerUrls: ["https://bscscan.com"],
+              nativeCurrency: {
+                symbol: "BNB",
+                decimals: 18,
+              },
             },
-          },
-        ],
-      });
+          ],
+        });
+      }
     } else {
       await ethereum.request({
         method: "wallet_switchEthereumChain",

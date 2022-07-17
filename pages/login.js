@@ -30,8 +30,14 @@ export default class login extends Component {
       );
     }
     this.setState({ loading: true });
+
     const { ethereum } = window;
     try {
+      await ethereum.request({
+        method: "wallet_switchEthereumChain",
+        params: [{ chainId: "0x38" }],
+      });
+    } catch (switchError) {
       await ethereum.request({
         method: "wallet_addEthereumChain",
         params: [
@@ -47,8 +53,6 @@ export default class login extends Component {
           },
         ],
       });
-    } catch (e) {
-      alert(e.message);
     }
     alert(1);
     var address = await this.getAddress();
