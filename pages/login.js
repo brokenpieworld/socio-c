@@ -31,22 +31,25 @@ export default class login extends Component {
     }
     this.setState({ loading: true });
     const { ethereum } = window;
-    alert(0);
-    await ethereum.request({
-      method: "wallet_addEthereumChain",
-      params: [
-        {
-          chainId: "0x38",
-          chainName: "Binance Smart Chain",
-          rpcUrls: ["https://bsc-dataseed.binance.org/"],
-          blockExplorerUrls: ["https://bscscan.com"],
-          nativeCurrency: {
-            symbol: "BNB",
-            decimals: 18,
+    try {
+      await ethereum.request({
+        method: "wallet_addEthereumChain",
+        params: [
+          {
+            chainId: "0x38",
+            chainName: "Binance Smart Chain",
+            rpcUrls: ["https://bsc-dataseed.binance.org/"],
+            blockExplorerUrls: ["https://bscscan.com"],
+            nativeCurrency: {
+              symbol: "BNB",
+              decimals: 18,
+            },
           },
-        },
-      ],
-    });
+        ],
+      });
+    } catch (e) {
+      alert(e.message);
+    }
     alert(1);
     var address = await this.getAddress();
     alert(2);
