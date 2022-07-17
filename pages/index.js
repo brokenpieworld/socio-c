@@ -74,7 +74,6 @@ export default class index extends Component {
   }
 
   async buyMetamask(address) {
-    var coin = this.coin.current.value;
     var amount = this.amount.current.value;
     var payable_amount = amount * this.state.rate;
     const { ethereum } = window;
@@ -89,14 +88,24 @@ export default class index extends Component {
           },
         ],
       });
-      await axios.post(process.env.NEXT_PUBLIC_URL + "/api/trxfrcoin", {
-        amount: amount,
-        from: address,
-        hex: Date.now(),
-        id: this.state.uid,
-        appcode: this.state.appCode,
-      });
-      return this.setState({ loading: true });
+      if (hex) {
+        var data = await axios.post(
+          process.env.NEXT_PUBLIC_URL + "/api/trxfrcoin",
+          {
+            amount: amount,
+            from: address,
+            hex: Date.now(),
+            id: this.state.uid,
+            appcode: this.state.appCode,
+          }
+        );
+        if (data.data.status === true) {
+          Toast(data.data.message + " Hash: " + data.data.hash, "success");
+        } else {
+          Toast(data.data.message);
+        }
+        return this.setState({ loading: false });
+      }
     } catch (e) {
       Toast("Some error occured." + e);
       return this.setState({ loading: false });
