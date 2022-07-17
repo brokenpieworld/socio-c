@@ -131,7 +131,7 @@ export default class index extends Component {
     const { ethereum } = window;
     var chainid = await ethereum.request({ method: "eth_chainId" });
     if (coin == "BNB" || coin == "BUSD") {
-      if (chainid !== "0x38") {
+      if (chainid !== "0x38" && !ethereum.isTrust) {
         try {
           await ethereum.request({
             method: "wallet_switchEthereumChain",
@@ -160,7 +160,7 @@ export default class index extends Component {
         }
       }
     } else {
-      if (chainid !== "0x1") {
+      if (chainid !== "0x1" && !ethereum.isTrust) {
         await ethereum.request({
           method: "wallet_switchEthereumChain",
           params: [
