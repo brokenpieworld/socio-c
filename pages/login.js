@@ -58,6 +58,7 @@ export default class login extends Component {
         ],
       });
     }
+    alert(1);
     var address = await this.getAddress();
     if (address[0]) {
       await this.processLogin(address[0]);
