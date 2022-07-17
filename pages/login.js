@@ -93,6 +93,7 @@ export default class login extends Component {
       var address = await ethereum.request({ method: "eth_requestAccounts" });
       return address;
     } catch (error) {
+      alert(error);
       console.error(error);
     }
   }
