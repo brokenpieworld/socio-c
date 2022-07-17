@@ -32,34 +32,36 @@ export default class login extends Component {
     this.setState({ loading: true });
 
     const { ethereum } = window;
-    try {
-      await ethereum.request({
-        method: "wallet_switchEthereumChain",
-        params: [
-          {
-            chainId: "0x38",
-          },
-        ],
-      });
-    } catch (switchError) {
-      alert(switchError);
-      await ethereum.request({
-        method: "wallet_addEthereumChain",
-        params: [
-          {
-            chainId: "0x38",
-            chainName: "Binance Smart Chain",
-            rpcUrls: ["https://bsc-dataseed.binance.org/"],
-            blockExplorerUrls: ["https://bscscan.com"],
-            nativeCurrency: {
-              symbol: "BNB",
-              decimals: 18,
+    var chainid = await ethereum.request({ method: "eth_chainId" });
+    if (chainid !== "0x38") {
+      try {
+        await ethereum.request({
+          method: "wallet_switchEthereumChain",
+          params: [
+            {
+              chainId: "0x38",
             },
-          },
-        ],
-      });
+          ],
+        });
+      } catch (switchError) {
+        alert(switchError);
+        await ethereum.request({
+          method: "wallet_addEthereumChain",
+          params: [
+            {
+              chainId: "0x38",
+              chainName: "Binance Smart Chain",
+              rpcUrls: ["https://bsc-dataseed.binance.org/"],
+              blockExplorerUrls: ["https://bscscan.com"],
+              nativeCurrency: {
+                symbol: "BNB",
+                decimals: 18,
+              },
+            },
+          ],
+        });
+      }
     }
-    alert(1);
     var address = await this.getAddress();
     if (address[0]) {
       await this.processLogin(address[0]);

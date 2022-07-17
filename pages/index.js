@@ -129,42 +129,47 @@ export default class index extends Component {
     this.setState({ loading: true });
     var coin = this.coin.current.value;
     const { ethereum } = window;
+    var chainid = await ethereum.request({ method: "eth_chainId" });
     if (coin == "BNB" || coin == "BUSD") {
-      try {
+      if (chainid !== "0x38") {
+        try {
+          await ethereum.request({
+            method: "wallet_switchEthereumChain",
+            params: [
+              {
+                chainId: "0x38",
+              },
+            ],
+          });
+        } catch (switchError) {
+          await ethereum.request({
+            method: "wallet_addEthereumChain",
+            params: [
+              {
+                chainId: "0x38",
+                chainName: "Binance Smart Chain",
+                rpcUrls: ["https://bsc-dataseed.binance.org/"],
+                blockExplorerUrls: ["https://bscscan.com"],
+                nativeCurrency: {
+                  symbol: "BNB",
+                  decimals: 18,
+                },
+              },
+            ],
+          });
+        }
+      }
+    } else {
+      if (chainid !== "0x1") {
         await ethereum.request({
           method: "wallet_switchEthereumChain",
           params: [
             {
-              chainId: "0x38",
-            },
-          ],
-        });
-      } catch (switchError) {
-        await ethereum.request({
-          method: "wallet_addEthereumChain",
-          params: [
-            {
-              chainId: "0x38",
-              chainName: "Binance Smart Chain",
-              rpcUrls: ["https://bsc-dataseed.binance.org/"],
-              blockExplorerUrls: ["https://bscscan.com"],
-              nativeCurrency: {
-                symbol: "BNB",
-                decimals: 18,
-              },
+              chainId: "0x1",
             },
           ],
         });
       }
-    } else {
-      await ethereum.request({
-        method: "wallet_switchEthereumChain",
-        params: [
-          {
-            chainId: "0x1",
-          },
-        ],
-      });
     }
 
     var address = await this.getAddress();
