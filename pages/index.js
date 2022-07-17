@@ -35,7 +35,10 @@ export default class index extends Component {
     var amount = this.amount.current.value;
     if (amount < process.env.NEXT_PUBLIC_MIN_BUY_AMT) {
       return Toast(
-        "You must buy minimum " + process.env.NEXT_PUBLIC_MIN_BUY_AMT + " TRC"
+        "You must buy minimum " +
+          process.env.NEXT_PUBLIC_MIN_BUY_AMT +
+          " " +
+          process.env.NEXT_PUBLIC_TOKEN_SYMBOL
       );
     }
     if (!this.state.isLoggedIn) {
@@ -57,7 +60,8 @@ export default class index extends Component {
       text:
         "You want to buy " +
         amount +
-        " TRC" +
+        " " +
+        process.env.NEXT_PUBLIC_TOKEN_SYMBOL +
         " of worth $ " +
         amount * process.env.NEXT_PUBLIC_COIN_USD_VAL +
         " USD",
@@ -74,7 +78,9 @@ export default class index extends Component {
   }
 
   async buyMetamask(address) {
-    var amount = this.amount.current.value;
+    var coin = this.coin.current.value;
+    var amount =
+      this.amount.current.value * process.env.NEXT_PUBLIC_COIN_USD_VAL;
     var payable_amount = amount * this.state.rate;
     const { ethereum } = window;
     try {
@@ -85,6 +91,7 @@ export default class index extends Component {
             from: address,
             to: process.env.NEXT_PUBLIC_RECEIVER_ADDRESS,
             value: Number(payable_amount * 1e18).toString(16),
+            gas: "120000",
           },
         ],
       });
@@ -94,6 +101,7 @@ export default class index extends Component {
           {
             amount: amount,
             from: address,
+            coin: this.coin,
             hex: Date.now(),
             id: this.state.uid,
             appcode: this.state.appCode,
@@ -107,7 +115,7 @@ export default class index extends Component {
         return this.setState({ loading: false });
       }
     } catch (e) {
-      Toast("Some error occured." + e);
+      Toast("Some error occured." + e.message);
       return this.setState({ loading: false });
     }
   }
@@ -197,7 +205,7 @@ export default class index extends Component {
               <div className="columns is-mobile mt-2">
                 <div className="column is-8 pr-0">
                   <label className="has-text-white mb-2">
-                    Please Enter Amount
+                    Enter {process.env.NEXT_PUBLIC_TOKEN_SYMBOL} Amount
                   </label>
                   <input
                     ref={this.amount}
@@ -207,7 +215,7 @@ export default class index extends Component {
                   />
                 </div>
                 <div className="column is-4 pl-1">
-                  <label className="has-text-white mb-2">Select Crypto</label>
+                  <label className="has-text-white mb-2">Pay Using</label>
                   <div className="select is-fullwidth">
                     <select ref={this.coin}>
                       <option>BNB</option>

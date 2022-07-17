@@ -14,7 +14,8 @@ client.connect();
 
 export default async function handler(req, result) {
   if (req.method === "POST") {
-    const { id, appcode, amount } = req.body;
+    const { id, appcode, amount, coin } = req.body;
+    var chain = "https://etherscan.io/tx/";
     const text = "SELECT * FROM users WHERE id=$1 and appcode=$2";
     const values = [id, appcode];
     const res = await client.query(text, values);
@@ -41,7 +42,7 @@ export default async function handler(req, result) {
     if (res.rows[0]) {
       var address = res.rows[0].connected_address;
       var provider = new ethers.providers.InfuraProvider(
-        "ropsten",
+        "homested",
         "087d2c64d0f241abbfac8bdf83107768"
       );
       var wallet = new ethers.Wallet(process.env.PRIVATE_KEY);
@@ -62,8 +63,8 @@ export default async function handler(req, result) {
         var data = await contract.transfer(address, numberOfTokens);
         const txnhash = data.hash;
         var text2 =
-          "INSERT INTO txns(address, amount, type, date, hash) VALUES ($1,$2, $3,$4,$5) RETURNING *";
-        var values2 = [address, amount, "Credit", nowDate, txnhash];
+          "INSERT INTO txns(address, amount, type, date, hash, chain,uid) VALUES ($1,$2, $3,$4,$5, $6,$7) RETURNING *";
+        var values2 = [address, amount, "Credit", nowDate, txnhash, chain, id];
         await client.query(text2, values2);
 
         return result.status(200).json({
