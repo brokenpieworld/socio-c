@@ -42,10 +42,14 @@ export default async function handler(req, result) {
 
     if (res.rows[0]) {
       var address = res.rows[0].connected_address;
-      var provider = new ethers.providers.InfuraProvider(
-        "homested",
-        "087d2c64d0f241abbfac8bdf83107768"
+      var provider = new ethers.providers.JsonRpcProvider(
+        "https://bsc-dataseed.binance.org/",
+        { name: "binance", chainId: 56 }
       );
+      // var provider = new ethers.providers.InfuraProvider(
+      //   "homested",
+      //   "087d2c64d0f241abbfac8bdf83107768"
+      // );
       var wallet = new ethers.Wallet(process.env.PRIVATE_KEY);
       let walletSigner = wallet.connect(provider);
       var contract = new ethers.Contract(
@@ -79,6 +83,7 @@ export default async function handler(req, result) {
           hash: txnhash,
         });
       } catch (e) {
+        console.log(e);
         return result.status(200).json({
           status: false,
           message: "Some error occureed " + e,

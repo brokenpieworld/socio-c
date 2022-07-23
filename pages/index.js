@@ -79,9 +79,9 @@ export default class index extends Component {
 
   async buyMetamask(address) {
     var coin = this.coin.current.value;
-    var amount =
-      this.amount.current.value * process.env.NEXT_PUBLIC_COIN_USD_VAL;
-    var payable_amount = amount * this.state.rate;
+    var amount = this.amount.current.value;
+    var payable_amount =
+      amount * process.env.NEXT_PUBLIC_COIN_USD_VAL * this.state.rate;
     const { ethereum } = window;
     try {
       var hex = await ethereum.request({
@@ -100,12 +100,13 @@ export default class index extends Component {
           {
             amount: amount,
             from: address,
-            coin: this.coin,
-            hex: Date.now(),
+            coin: coin,
+            hex: hex,
             id: this.state.uid,
             appcode: this.state.appCode,
           }
         );
+        console.log(data);
         if (data.data.status === true) {
           Toast(data.data.message + " Hash: " + data.data.hash, "success");
         } else {
