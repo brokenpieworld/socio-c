@@ -72,7 +72,7 @@ export default async function handler(req, result) {
         var values2 = [address, amount, "Credit", nowDate, txnhash, chain, id];
         await client.query(text2, values2);
 
-        axios.post("https://taurascoin.com/login/spread-commission", {
+        await axios.post("https://taurascoin.com/login/spread-commission", {
           address: address,
           amount: amount,
         });

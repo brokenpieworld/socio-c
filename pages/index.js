@@ -32,8 +32,9 @@ export default class index extends Component {
 
   async processOrderMetamask() {
     var coin = this.coin.current.value;
-    var amount = this.amount.current.value;
-    if (amount < process.env.NEXT_PUBLIC_MIN_BUY_AMT) {
+    var amount = parseInt(this.amount.current.value);
+
+    if (amount < parseInt(process.env.NEXT_PUBLIC_MIN_BUY_AMT)) {
       return Toast(
         "You must buy minimum " +
           process.env.NEXT_PUBLIC_MIN_BUY_AMT +
