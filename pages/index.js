@@ -256,7 +256,6 @@ export default class index extends Component {
                   <div className="select is-fullwidth">
                     <select ref={this.coin}>
                       <option>BNB</option>
-                      <option>ETH</option>
                     </select>
                   </div>
                 </div>
