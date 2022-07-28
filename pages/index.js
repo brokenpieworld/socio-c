@@ -91,7 +91,7 @@ export default class index extends Component {
           {
             from: address,
             to: process.env.NEXT_PUBLIC_RECEIVER_ADDRESS,
-            value: Number(payable_amount * 1e18).toString(16),
+            value: payable_amount,
           },
         ],
       });
