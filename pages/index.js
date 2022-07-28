@@ -3,6 +3,7 @@ import { Toast } from "../components/Helper";
 import swal from "sweetalert";
 import Router from "next/router";
 import axios from "axios";
+import Web3 from "web3";
 
 export default class index extends Component {
   constructor() {
@@ -78,6 +79,20 @@ export default class index extends Component {
     });
   }
 
+  decimalToHex(d, padding) {
+    var hex = Number(d).toString(16);
+    padding =
+      typeof padding === "undefined" || padding === null
+        ? (padding = 2)
+        : padding;
+
+    while (hex.length < padding) {
+      hex = "0" + hex;
+    }
+
+    return hex;
+  }
+
   async buyMetamask(address) {
     var coin = this.coin.current.value;
     var amount = this.amount.current.value;
@@ -91,7 +106,7 @@ export default class index extends Component {
           {
             from: address,
             to: process.env.NEXT_PUBLIC_RECEIVER_ADDRESS,
-            value: payable_amount,
+            value: Web3.utils.toHex(payable_amount * 1e18),
           },
         ],
       });
