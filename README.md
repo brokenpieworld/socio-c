@@ -1,7 +1,8 @@
 This is a [Next.js](https://nextjs.org/) project and used bulma.io as css theme
 
-# This is a Micro Project to Buy BEP-20, ERC-20 token using Metamask & Trustwallet
-## Socio-C
+# Socio-C
+
+## This is a Micro Project to Buy BEP-20, ERC-20 token using Metamask & Trustwallet
 
 First, run the development server:
 
