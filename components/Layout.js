@@ -103,8 +103,8 @@ export default function Layout({ children }) {
       <footer className="footer mt-5">
         <div className="content has-text-centered">
           <p>
-            <strong>&copy; Tauras Coin</strong>. Crypto Investments are subject
-            to market risks. <br /> Privacy: Tauras Coin never share user
+            <strong>&copy; All rights reserved</strong>. Crypto Investments are subject
+            to market risks. <br /> Privacy: We never share user
             information with any third party at any condition except required by
             law.
           </p>
