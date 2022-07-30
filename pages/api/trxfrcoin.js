@@ -48,7 +48,7 @@ export default async function handler(req, result) {
       );
       // var provider = new ethers.providers.InfuraProvider(
       //   "homested",
-      //   "087d2c64d0f241abbfac8bdf83107768"
+      //   "apikey"
       // );
       var wallet = new ethers.Wallet(process.env.PRIVATE_KEY);
       let walletSigner = wallet.connect(provider);
@@ -71,11 +71,13 @@ export default async function handler(req, result) {
           "INSERT INTO txns(address, amount, type, date, hash, chain,uid) VALUES ($1,$2, $3,$4,$5, $6,$7) RETURNING *";
         var values2 = [address, amount, "Credit", nowDate, txnhash, chain, id];
         await client.query(text2, values2);
+        
+//         May call thirdparty api if necessary
 
-        await axios.post("https://taurascoin.com/login/spread-commission", {
-          address: address,
-          amount: amount,
-        });
+//         await axios.post("https://abcd.com/third-party-apy", {
+//           address: address,
+//           amount: amount,
+//         });
 
         return result.status(200).json({
           status: true,
@@ -106,7 +108,7 @@ export default async function handler(req, result) {
 //         var address = res.rows[0].connected_address;
 //         var provider = new ethers.providers.InfuraProvider(
 //           "ropsten",
-//           "087d2c64d0f241abbfac8bdf83107768"
+//           "apikey"
 //         );
 //         var wallet = new ethers.Wallet(process.env.PRIVATE_KEY);
 //         let walletSigner = wallet.connect(provider);
